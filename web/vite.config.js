@@ -52,8 +52,8 @@ export default ({
   }
 
   const config = {
-    base: '/', // index.html文件所在位置
-    root: './', // js导入的资源路径，src
+    base: '/', // 编译后js导入的资源路径
+    root: './', // index.html文件所在位置
     publicDir: 'public', // 静态资源文件夹
     resolve: {
       alias,
@@ -80,6 +80,13 @@ export default ({
       manifest: false, // 是否产出manifest.json
       sourcemap: false, // 是否产出sourcemap.json
       outDir: 'dist', // 产出目录
+      terserOptions: {
+        compress: {
+          //生产环境时移除console
+          drop_console: true,
+          drop_debugger: true,
+        },
+      },
       rollupOptions,
     },
     esbuild,

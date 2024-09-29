@@ -13,12 +13,7 @@
         >
           新增
         </el-button>
-        <el-icon
-          class="cursor-pointer"
-          @click="toDoc('https://www.bilibili.com/video/BV1kv4y1g7nT?p=3&vd_source=f2640257c21e3b547a790461ed94875e')"
-        >
-          <VideoCameraFilled />
-        </el-icon>
+
       </div>
       <el-table :data="tableData">
         <el-table-column
@@ -153,8 +148,6 @@ import {
 import { ref } from 'vue'
 import WarningBar from '@/components/warningBar/warningBar.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { toDoc } from '@/utils/doc'
-import { VideoCameraFilled } from '@element-plus/icons-vue'
 
 defineOptions({
   name: 'AutoPkg',
@@ -177,8 +170,10 @@ const getTemplates = async ()=>{
 
 getTemplates()
 
-const validateNum = (rule, value, callback) => {
-  if ((/^\d+$/.test(value[0]))) {
+const validateData = (rule, value, callback) => {
+  if (/[\u4E00-\u9FA5]/g.test(value)) {
+    callback(new Error('不能为中文'))
+  } else if ((/^\d+$/.test(value[0]))) {
     callback(new Error('不能够以数字开头'))
   } else {
     callback()
@@ -188,11 +183,11 @@ const validateNum = (rule, value, callback) => {
 const rules = ref({
   packageName: [
     { required: true, message: '请输入包名', trigger: 'blur' },
-    { validator: validateNum, trigger: 'blur' }
+    { validator: validateData, trigger: 'blur' }
   ],
   template:[
     { required: true, message: '请选择模板', trigger: 'change' },
-    { validator: validateNum, trigger: 'blur' }
+    { validator: validateData, trigger: 'blur' }
   ]
 })
 
